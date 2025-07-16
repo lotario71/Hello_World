@@ -54,6 +54,12 @@ jobs:
         yes | $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$SDK_ROOT --licenses
         yes | $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$SDK_ROOT "platform-tools" "build-tools;33.0.0" "platforms;android-33"
 
+
+    - name: Clean build before building final APK
+      run: |
+        buildozer android clean
+
+
     - name: Build final APK
       run: |
         buildozer android debug
