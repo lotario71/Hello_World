@@ -1,4 +1,4 @@
-name: Buildozer Android APK
+name: Daniel test build APK
 
 on:
   workflow_dispatch:
