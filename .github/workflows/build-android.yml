@@ -23,15 +23,16 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython virtualenv
 
-    - name: Accept Android SDK Licenses
-      env:
-        ANDROID_HOME: /home/runner/.buildozer/android/platform/android-sdk
+    - name: Trigger SDK installation (dummy build)
       run: |
-        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+        buildozer android clean
+        buildozer android debug || true  # Permitir error (esperado por falta de licencias)
 
-    - name: Build APK
-      env:
-        ANDROID_HOME: /home/runner/.buildozer/android/platform/android-sdk
+    - name: Accept Android SDK Licenses
+      run: |
+        yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/*/bin/sdkmanager --licenses
+
+    - name: Final Build APK
       run: |
         buildozer android debug
 
