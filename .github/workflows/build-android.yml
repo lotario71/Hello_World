@@ -23,13 +23,17 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython virtualenv
 
-    - name: Trigger first build to download SDK (will fail)
+    - name: Trigger initial environment download
       run: |
         buildozer android debug || true
 
-    - name: Accept Android SDK Licenses
+    - name: List contents to locate sdkmanager
       run: |
-        yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/*/bin/sdkmanager --licenses
+        find ~/.buildozer/android/platform/android-sdk -type f -name sdkmanager
+
+    - name: Accept Android SDK Licenses (robust)
+      run: |
+        yes | $(find ~/.buildozer/android/platform/android-sdk -type f -name sdkmanager) --licenses
 
     - name: Final Build APK
       run: |
