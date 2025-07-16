@@ -23,10 +23,9 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython virtualenv
 
-    - name: Trigger SDK installation (dummy build)
+    - name: Trigger first build to download SDK (will fail)
       run: |
-        buildozer android clean
-        buildozer android debug || true  # Permitir error (esperado por falta de licencias)
+        buildozer android debug || true
 
     - name: Accept Android SDK Licenses
       run: |
