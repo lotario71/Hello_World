@@ -23,7 +23,15 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython virtualenv
 
+    - name: Accept Android SDK Licenses
+      env:
+        ANDROID_HOME: /home/runner/.buildozer/android/platform/android-sdk
+      run: |
+        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+
     - name: Build APK
+      env:
+        ANDROID_HOME: /home/runner/.buildozer/android/platform/android-sdk
       run: |
         buildozer android debug
 
@@ -32,4 +40,3 @@ jobs:
       with:
         name: HelloWorld-APK
         path: bin/*.apk
-
