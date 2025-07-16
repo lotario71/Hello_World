@@ -1,4 +1,4 @@
-name: Daniel test build APK
+name: Daniel APK Build
 
 on:
   workflow_dispatch:
@@ -19,23 +19,29 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential git openjdk-17-jdk python3-pip zip unzip
+        sudo apt-get install -y build-essential git zip unzip openjdk-17-jdk wget python3-pip
         pip install --upgrade pip
         pip install buildozer cython virtualenv
 
-    - name: Trigger initial environment download
+    - name: Bootstrap Buildozer (to generate .buildozer directory)
       run: |
         buildozer android debug || true
 
-    - name: List contents to locate sdkmanager
+    - name: Manually install Android cmdline-tools
       run: |
-        find ~/.buildozer/android/platform/android-sdk -type f -name sdkmanager
+        mkdir -p $HOME/.buildozer/android/platform/android-sdk/cmdline-tools
+        cd $HOME/.buildozer/android/platform/android-sdk/cmdline-tools
+        wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O tools.zip
+        unzip tools.zip
+        mv cmdline-tools latest
 
-    - name: Accept Android SDK Licenses (robust)
+    - name: Accept Android licenses and install build tools
       run: |
-        yes | $(find ~/.buildozer/android/platform/android-sdk -type f -name sdkmanager) --licenses
+        export SDK_ROOT=$HOME/.buildozer/android/platform/android-sdk
+        yes | $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$SDK_ROOT --licenses
+        yes | $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$SDK_ROOT "platform-tools" "build-tools;33.0.0" "platforms;android-33"
 
-    - name: Final Build APK
+    - name: Build final APK
       run: |
         buildozer android debug
 
