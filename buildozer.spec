@@ -7,7 +7,7 @@ source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
 
 
-requirements = python3,kivy==2.1.0,pyjnius==1.2.0,cython==0.29.36
+requirements = python3,kivy,kivymd,requests,pandas,matplotlib,cython
 
 
 version = 1.0.0
